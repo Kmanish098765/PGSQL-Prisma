@@ -1,0 +1,395 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model gsdept {
+  gsdeptid    Int           @id @default(autoincrement())
+  dept        String?       @db.VarChar(50)
+  dateadded   DateTime?     @db.Timestamp(6)
+  sortorder   Int?
+  tenantid    Int?
+  tblclient   tblclient?    @relation(fields: [tenantid], references: [tenantid], onDelete: NoAction, onUpdate: NoAction, map: "fk_gsdept_tenant")
+  gsemployees gsemployees[]
+}
+
+model gsemployees {
+  gsemployeesid                Int          @id @default(autoincrement())
+  firstname                    String?      @db.VarChar(50)
+  lastname                     String?      @db.VarChar(50)
+  email                        String?      @db.VarChar(50)
+  jobtitle                     String?      @db.VarChar(50)
+  phone                        String?      @db.VarChar(50)
+  phone2                       String?      @db.VarChar(50)
+  street                       String?      @db.VarChar(50)
+  city                         String?      @db.VarChar(50)
+  st                           String?      @db.VarChar(50)
+  zip                          String?      @db.VarChar(50)
+  userid                       String?      @db.VarChar(50)
+  password                     String?      @db.VarChar(50)
+  enabled                      Boolean?
+  dateadded                    DateTime?    @db.Timestamp(6)
+  admin                        Boolean?
+  gsdeptid                     Int
+  salesterritory               String?      @db.VarChar(60)
+  acctqbsalesrep               String?      @db.VarChar(5)
+  goalcalls                    Int?         @db.SmallInt
+  goalsales                    Int?
+  birthdate                    DateTime?    @db.Timestamp(6)
+  hiredate                     DateTime?    @db.Timestamp(6)
+  salesdata                    Boolean
+  activitydetail               Boolean?
+  showinlists                  Boolean?     @default(true)
+  cancreatecontracts           Boolean?     @default(true)
+  candeletecustomers           Int?         @default(1)
+  managerid                    Int?         @default(-1)
+  manageroverride              Float?
+  candeletenotes               Int?         @default(1)
+  caneditnotes                 Int?         @default(1)
+  notes                        String?
+  issa                         Boolean?     @default(false)
+  caneditgoals                 Boolean?     @default(false)
+  cansyncgoogle                Boolean?     @default(false)
+  googun                       String?      @db.VarChar(100)
+  googpw                       String?      @db.VarChar(100)
+  googmodedefault              Int?         @default(1)
+  googcalfromdate              Int?         @default(-1)
+  googcaltodate                Int?         @default(12)
+  caneditannouncements         Boolean?     @default(false)
+  fax                          String?      @db.VarChar(50)
+  lastmmnotificationdate       DateTime?    @db.Timestamp(6)
+  dsuser                       Boolean      @default(false)
+  canwrklistaccountaccess      Int?
+  notessetting                 Int?
+  issystem                     Boolean      @default(false)
+  googleoauthrefreshtoken      String?
+  googleoauthconnectionstatus  Int?
+  batchdelete                  String       @default("") @db.VarChar(15)
+  bccemailid                   String?      @db.VarChar(250)
+  campaignerkey                String?      @db.VarChar(250)
+  campaigneruserid             String?      @db.VarChar(250)
+  campaignerpwd                String?      @db.VarChar(250)
+  linktypeid                   Int?
+  mailchimpapikey              String?      @default("") @db.VarChar(1000)
+  imageurl                     String?
+  enablebatchupdate            Int          @default(0)
+  defaultdashboardid           Int?
+  ismailchimpenabled           Boolean?
+  iscampaignerenabled          Boolean?
+  gmailid                      String?      @db.VarChar(100)
+  gmailname                    String?      @db.VarChar(100)
+  gmailrefreshtoken            String?
+  isgmailtype                  Boolean?
+  canuseapi                    Boolean      @default(false)
+  outlookaccountdetails        String?
+  color                        String?      @db.VarChar(10)
+  roleid                       Int?
+  createdby                    Int?
+  updatedby                    Int?
+  updatedon                    DateTime?    @db.Timestamp(6)
+  cansendcrmemail              Boolean?
+  caneditorders                Boolean?
+  cancreatechangeorders        Boolean?
+  candeleteorders              Boolean?
+  gamaccess                    Int          @default(0)
+  canapplychangeorders         Boolean?
+  canallowadminactionsonorders Boolean?
+  cancreatepaymentplans        Boolean?
+  tenantid                     Int?
+  gsdept                       gsdept       @relation(fields: [gsdeptid], references: [gsdeptid], onDelete: NoAction, onUpdate: NoAction, map: "fk_gsemployees_gsdept_gsdeptid")
+  tbluserrole                  tbluserrole? @relation(fields: [roleid], references: [roleid], onDelete: NoAction, onUpdate: NoAction, map: "fk_gsemployees_tbluserrole_roleid")
+  tblclient                    tblclient?   @relation(fields: [tenantid], references: [tenantid], onDelete: NoAction, onUpdate: NoAction, map: "fk_gsemployees_tenant")
+}
+
+model tblclient {
+  clientid                    Int                           @id @default(autoincrement())
+  tenantid                    Int                           @unique
+  servername                  String?                       @db.VarChar(100)
+  databasename                String?                       @db.VarChar(100)
+  userid                      String?                       @db.VarChar(100)
+  password                    String?                       @db.VarChar(100)
+  mm_address                  String?                       @db.VarChar(255)
+  gscustomers                 gscustomers[]
+  gsdept                      gsdept[]
+  gsemployees                 gsemployees[]
+  tbldashboards               tbldashboards[]
+  tblopportunity2businessunit tblopportunity2businessunit[]
+  tblopportunity2product      tblopportunity2product[]
+  tblopportunityhistory       tblopportunityhistory[]
+  tblopportunitylossreason    tblopportunitylossreason[]
+  tblopportunitystagemapping  tblopportunitystagemapping[]
+  tblopportunitytypes         tblopportunitytypes[]
+  tblsalesopportunity         tblsalesopportunity[]
+  tblsalesopportunitytoorders tblsalesopportunitytoorders[]
+  tblsalespipeline            tblsalespipeline[]
+  tbluserrole                 tbluserrole[]
+}
+
+model tbldashboards {
+  id            Int        @id @default(autoincrement())
+  dashboardname String
+  url           String?    @db.VarChar(250)
+  isdefault     Boolean?   @default(false)
+  isactive      Boolean?   @default(true)
+  tenantid      Int?
+  tblclient     tblclient? @relation(fields: [tenantid], references: [tenantid], onDelete: NoAction, onUpdate: NoAction, map: "fk_tbldashboards_tenant")
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model tblopportunity2businessunit {
+  businessunitid Int
+  oppid          Int
+  tenantid       Int?
+  tblclient      tblclient? @relation(fields: [tenantid], references: [tenantid], onDelete: NoAction, onUpdate: NoAction, map: "fk_tblopportunity2businessunit_tenant")
+
+  @@id([oppid, businessunitid])
+  @@map("tblopportunity2businessunit") // maps to real table name
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model tblopportunity2product {
+  productid Int
+  oppid     Int
+  tenantid  Int?
+  tblclient tblclient? @relation(fields: [tenantid], references: [tenantid], onDelete: NoAction, onUpdate: NoAction, map: "fk_tblopportunity2product_tenant")
+  
+  @@id([oppid, productid])
+  @@map("tblopportunity2product") // maps to real table name
+}
+
+model tblopportunityhistory {
+  id               Int        @id @default(autoincrement())
+  opportunityid    Int?
+  opportunityfield String?    @db.VarChar(100)
+  oldvalue         String?
+  newvalue         String?
+  updatedby        String?    @db.VarChar(250)
+  updatedon        DateTime?  @db.Timestamp(6)
+  tenantid         Int?
+  tblclient        tblclient? @relation(fields: [tenantid], references: [tenantid], onDelete: NoAction, onUpdate: NoAction, map: "fk_tblopportunityhistory_tenant")
+}
+
+model tblopportunitylossreason {
+  id         Int        @id @default(autoincrement())
+  lossreason String?    @db.VarChar(250)
+  bysystem   Boolean?
+  sortorder  Int?
+  tenantid   Int?
+  tblclient  tblclient? @relation(fields: [tenantid], references: [tenantid], onDelete: NoAction, onUpdate: NoAction, map: "fk_tblopportunitylossreason_tenant")
+}
+
+model tblopportunitystagemapping {
+  id              Int        @id @default(autoincrement())
+  opportunityid   Int
+  stageid         Int
+  previousstageid Int?
+  userid          Int?
+  date            DateTime   @db.Timestamp(6)
+  tenantid        Int?
+  tblclient       tblclient? @relation(fields: [tenantid], references: [tenantid], onDelete: NoAction, onUpdate: NoAction, map: "fk_tblopportunitystagemapping_tenant")
+}
+
+model tblopportunitytypes {
+  id        Int        @id @default(autoincrement())
+  opptype   String?    @db.VarChar(150)
+  tenantid  Int?
+  tblclient tblclient? @relation(fields: [tenantid], references: [tenantid], onDelete: NoAction, onUpdate: NoAction, map: "fk_tblopportunitytypes_tenant")
+}
+
+model tblsalesopportunity {
+  id               Int               @id @default(autoincrement())
+  pipelinestageid  Int?
+  gscustomersid    Int?
+  contact          Int?
+  amount           Decimal?          @db.Decimal(19, 4)
+  productid        Int?
+  description      String?
+  deleted          Boolean?
+  closedate        DateTime?         @db.Date
+  roianalysis      Boolean?
+  budgetconfirmed  Boolean?
+  nextstep         String?
+  name             String?
+  owner            Int?
+  assignedto       Int?
+  type             Int?
+  source           String?
+  businessunit     Int?
+  lossreason       Int?
+  notes            String?
+  createddate      DateTime?         @db.Timestamp(6)
+  modifieddate     DateTime?         @db.Timestamp(6)
+  iswon            Int?              @default(-1) @db.SmallInt
+  actualclosedate  DateTime?         @db.Date
+  probability      Int?
+  status           String?           @db.VarChar(20)
+  salespresenter   String?
+  tenantid         Int?
+  tblsalespipeline tblsalespipeline? @relation(fields: [pipelinestageid], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_tblsalesopportunity_tblsalespipeline")
+  tblclient        tblclient?        @relation(fields: [tenantid], references: [tenantid], onDelete: NoAction, onUpdate: NoAction, map: "fk_tblsalesopportunity_tenant")
+}
+
+model tblsalesopportunitytoorders {
+  id            Int        @id @default(autoincrement())
+  opportunityid Int
+  proposalid    Int
+  orderid       Int
+  linkeddate    DateTime?  @db.Timestamp(6)
+  tenantid      Int?
+  tblclient     tblclient? @relation(fields: [tenantid], references: [tenantid], onDelete: NoAction, onUpdate: NoAction, map: "fk_tblsalesopportunitytoorders_tenant")
+}
+
+model tblsalespipeline {
+  id                  Int                   @id @default(autoincrement())
+  stage               String?               @db.VarChar(500)
+  description         String?
+  percentclosed       Int?
+  sortorder           Int?
+  colorcode           String?               @db.VarChar(50)
+  cancustomerchange   Boolean?
+  tenantid            Int?
+  tblsalesopportunity tblsalesopportunity[]
+  tblclient           tblclient?            @relation(fields: [tenantid], references: [tenantid], onDelete: NoAction, onUpdate: NoAction, map: "fk_tblsalespipeline_tenant")
+}
+
+model tbluserrole {
+  roleid                Int           @id @default(autoincrement())
+  name                  String        @unique @db.VarChar(100)
+  cancreatecontracts    Boolean
+  caneditannouncements  Boolean
+  caneditgoals          Boolean
+  activitydetail        Boolean
+  candeletecustomers    Int
+  enablebatchupdate     Int
+  notessetting          Int
+  caneditnotes          Int
+  candeletenotes        Int
+  arsettings            Int
+  caneditorders         Boolean
+  cancreatechangeorders Boolean
+  candeleteorders       Boolean
+  canapplychangeorders  Boolean
+  cancreatepaymentplans Boolean?
+  tenantid              Int?
+  gsemployees           gsemployees[]
+  tblclient             tblclient?    @relation(fields: [tenantid], references: [tenantid], onDelete: NoAction, onUpdate: NoAction, map: "fk_tbluserrole_tenant")
+}
+
+model gscustomers {
+  gscustomersid            Int       @id @default(autoincrement())
+  customer                 String?   @default("") @db.VarChar(90)
+  pre                      String?   @default("") @db.VarChar(100)
+  firstname                String?   @default("") @db.VarChar(50)
+  middlename               String?   @default("") @db.VarChar(50)
+  lastname                 String?   @default("") @db.VarChar(50)
+  suffix                   String?   @default("") @db.VarChar(50)
+  nickname                 String?   @default("") @db.VarChar(50)
+  email                    String?   @default("") @db.VarChar(70)
+  email2                   String?   @default("") @db.VarChar(70)
+  phone                    String?   @default("") @db.VarChar(50)
+  phone2                   String?   @default("") @db.VarChar(50)
+  homephone                String?   @default("") @db.VarChar(50)
+  attn                     String?   @default("") @db.VarChar(50)
+  street                   String?   @default("") @db.VarChar(50)
+  street2                  String?   @default("") @db.VarChar(50)
+  city                     String?   @default("") @db.VarChar(50)
+  st                       String?   @default("") @db.VarChar(50)
+  zip                      String?   @default("") @db.VarChar(50)
+  county                   String?   @default("") @db.VarChar(50)
+  international            String?   @default("") @db.VarChar(255)
+  homeattn                 String?   @default("") @db.VarChar(50)
+  homestreet               String?   @default("") @db.VarChar(50)
+  homestreet2              String?   @default("") @db.VarChar(50)
+  homecity                 String?   @default("") @db.VarChar(50)
+  homest                   String?   @default("") @db.VarChar(50)
+  homezip                  String?   @default("") @db.VarChar(50)
+  homeinternational        String?   @default("") @db.VarChar(50)
+  fax                      String?   @default("") @db.VarChar(50)
+  homefax                  String?   @default("") @db.VarChar(50)
+  dateadded                DateTime? @default(now()) @db.Timestamp(6)
+  datelstmod               DateTime? @default(now()) @db.Timestamp(6)
+  title                    String?   @default("") @db.VarChar(70)
+  jobdescription           String?   @default("") @db.VarChar(100)
+  spouse                   String?   @default("") @db.VarChar(50)
+  kids                     String?   @default("") @db.VarChar(255)
+  charity                  String?   @default("") @db.VarChar(255)
+  extranotes               String?   @default("") @db.VarChar(1000)
+  gsrepid                  Int?
+  gscustomerstypeid        Int?
+  gsadagencyid             Int?
+  adagency                 String?   @default("") @db.VarChar(90)
+  priority                 Int?
+  budgetplanning           DateTime? @db.Timestamp(6)
+  adagencystreet           String?   @default("") @db.VarChar(50)
+  adagencycity             String?   @default("") @db.VarChar(50)
+  adagencyst               String?   @default("") @db.VarChar(50)
+  adagencyzip              String?   @default("") @db.VarChar(50)
+  adagencycounty           String?   @default("") @db.VarChar(50)
+  adagencyphone            String?   @default("") @db.VarChar(50)
+  adagencyfax              String?   @default("") @db.VarChar(50)
+  adagencyfirstname        String?   @default("") @db.VarChar(50)
+  adagencylastname         String?   @default("") @db.VarChar(50)
+  adagencyemail            String?   @default("") @db.VarChar(75)
+  adagencycell             String?   @default("") @db.VarChar(50)
+  appointmentsetter        Boolean?
+  convertid                Int?
+  noprodcharge             Boolean?
+  acctbillto               Int?
+  acctquickbooks           String?   @default("") @db.VarChar(200)
+  parentid                 Int?
+  relatedcustomerids       String?   @default("") @db.VarChar(2000)
+  phonextn                 String?   @default("") @db.VarChar(8)
+  directorycontact         Boolean?  @default(false)
+  birthdate                DateTime? @db.Date
+  paymentplan              String?   @default("") @db.VarChar(50)
+  url                      String?   @default("") @db.VarChar(255)
+  donotfax                 Boolean?  @default(false)
+  donotemail               Boolean?  @default(false)
+  terms                    String?   @default("") @db.VarChar(100)
+  daystopay                Int?      @default(0)
+  isagency                 Boolean?  @default(false)
+  phone3                   String?   @default("") @db.VarChar(50)
+  phone3xtn                String?   @default("") @db.VarChar(8)
+  includeinforecasting     Boolean?  @default(false)
+  importfileid             Int?      @default(-1)
+  importid                 Int?      @default(-1)
+  distributionstopid       Int?
+  quickbookscustomerid     String?   @db.VarChar(50)
+  editsequence             String?   @db.VarChar(16)
+  companyname              String?   @db.VarChar(100)
+  userid                   String?   @default("") @db.VarChar(50)
+  password                 String?   @default("") @db.VarChar(50)
+  nextcallback             DateTime? @db.Timestamp(6)
+  lastcontact              DateTime? @db.Timestamp(6)
+  lastcontract             DateTime? @db.Timestamp(6)
+  lastcomplist             DateTime? @db.Timestamp(6)
+  referencecustomerid      String?   @db.VarChar(30)
+  imageurl                 String?
+  twitterhandle            String?
+  facebookid               String?
+  linkedin                 String?
+  googleplus               String?
+  lastcontacttype          String?   @db.VarChar(50)
+  issocialprofileconfirmed Boolean   @default(false)
+  billingaltemails         String?
+  lastsubscriptiondate     DateTime? @db.Timestamp(6)
+  customertype             Int?
+  emailstatus              String?
+  email2status             String?
+  leadtype                 Int?
+  leadsource               String?
+  prospectingstageid       Int?
+  workflowids              String?
+  leadquality              String?   @db.VarChar(200)
+  leadstatus               String?
+  inactive                 Boolean?
+  ismkmprofileactive       Boolean?
+  istaxexempt              Boolean?
+  currencyid               Int?
+  tenantid                 Int
+  tblclient                tblclient @relation(fields: [tenantid], references: [tenantid], onDelete: SetNull, map: "fk_gscustomers_tenant")
+}
